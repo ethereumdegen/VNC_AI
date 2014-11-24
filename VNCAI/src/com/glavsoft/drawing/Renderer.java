@@ -244,6 +244,8 @@ public abstract class Renderer {
      * @param y      rectangle y position
      * @param width  rectangle width
      * @param height rectangle height
+     * 
+     * 
      */
     public void fillRect(int color, int x, int y, int width, int height) {
         synchronized (lock) {
@@ -344,4 +346,13 @@ public abstract class Renderer {
     public Object getLock() {
         return lock;
     }
+    
+    
+
+
+	public int[] getPixels() {
+		return pixels;
+	}
+	
+	
 }

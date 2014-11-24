@@ -39,6 +39,13 @@ import java.util.concurrent.TimeoutException;
 public class RendererImpl extends Renderer implements ImageObserver {
     CyclicBarrier barrier = new CyclicBarrier(2);
     private final Image offscreanImage;
+    
+    WritableRaster raster;
+    
+	public WritableRaster getRaster() {
+		return raster;
+	}
+
 	public RendererImpl(Reader reader, int width, int height, PixelFormat pixelFormat) {
 		if (0 == width) width = 1;
 		if (0 == height) height = 1;
@@ -48,7 +55,7 @@ public class RendererImpl extends Renderer implements ImageObserver {
 				height);
 
 		DataBuffer dataBuffer = new DataBufferInt(pixels, width * height);
-		WritableRaster raster = Raster.createWritableRaster(sampleModel,
+		 raster = Raster.createWritableRaster(sampleModel,
 				dataBuffer, null);
 		offscreanImage = new BufferedImage(colorModel, raster, false, null);
 		cursor = new SoftCursorImpl(0, 0, 0, 0);
@@ -101,6 +108,8 @@ public class RendererImpl extends Renderer implements ImageObserver {
 	public Image getOffscreenImage() {
 		return offscreanImage;
 	}
+	
+
 
 	public SoftCursorImpl getCursor() {
 		return (SoftCursorImpl) cursor;

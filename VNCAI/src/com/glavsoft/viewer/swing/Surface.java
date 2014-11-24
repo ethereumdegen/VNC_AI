@@ -24,6 +24,7 @@
 
 package com.glavsoft.viewer.swing;
 
+import com.glavsoft.ai.Intel;
 import com.glavsoft.core.SettingsChangedEvent;
 import com.glavsoft.drawing.Renderer;
 import com.glavsoft.rfb.IChangeSettingsListener;
@@ -36,6 +37,7 @@ import com.glavsoft.transport.Reader;
 import com.glavsoft.viewer.UiSettings;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 @SuppressWarnings("serial")
@@ -54,6 +56,8 @@ public class Surface extends JPanel implements IRepaintController, IChangeSettin
     private SwingViewerWindow viewerWindow;
     private double scaleFactor;
 	public Dimension oldSize;
+	private Intel intelligence;
+	
 
 	@Override
 	public boolean isDoubleBuffered() {
@@ -123,6 +127,7 @@ public class Surface extends JPanel implements IRepaintController, IChangeSettin
 	private void init(int width, int height) {
 		this.width = width;
 		this.height = height;
+		intelligence = new Intel();
 		setSize(getPreferredSize());
 	}
 
@@ -141,6 +146,8 @@ public class Surface extends JPanel implements IRepaintController, IChangeSettin
 			Image offscreenImage = renderer.getOffscreenImage();
 			if (offscreenImage != null) {
 				g.drawImage(offscreenImage, 0, 0, null);
+				intelligence.setRaster(renderer.getRaster());
+				intelligence.setMousePos(cursor.rX,cursor.rY);
 			}
 		}
 		synchronized (cursor.getLock()) {
