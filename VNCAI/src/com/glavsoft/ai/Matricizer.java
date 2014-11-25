@@ -36,10 +36,6 @@ public class Matricizer {
         m.put(0, 0, pixels);//turn bytes into a matrix for OpenCV functions
 	     
 	     
-		Core.rectangle(m, new Point(150,150), new Point(550,550), new Scalar(0,255,0)); //draw rect on image
-		
-	
-		
 		
 		return m;
 	}
