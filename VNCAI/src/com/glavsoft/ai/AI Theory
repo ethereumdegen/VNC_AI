@@ -1,0 +1,6 @@
+AI Theory
+
+Just like how you can do a 'magic wand' in paint, OpenCV will do contiguous magic wands (floodfill) on the image and put the groups of pixels into objects.  This will be multi-dimensional as multiple tolerances will be used.
+
+
+
