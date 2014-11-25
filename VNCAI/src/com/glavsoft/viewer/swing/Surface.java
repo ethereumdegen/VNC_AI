@@ -24,7 +24,7 @@
 
 package com.glavsoft.viewer.swing;
 
-import com.glavsoft.ai.Intel;
+import com.glavsoft.ai.AIMaster;
 import com.glavsoft.core.SettingsChangedEvent;
 import com.glavsoft.drawing.Renderer;
 import com.glavsoft.rfb.IChangeSettingsListener;
@@ -56,7 +56,7 @@ public class Surface extends JPanel implements IRepaintController, IChangeSettin
     private SwingViewerWindow viewerWindow;
     private double scaleFactor;
 	public Dimension oldSize;
-	private Intel intelligence;
+	private AIMaster intelligence;
 	
 
 	@Override
@@ -77,6 +77,9 @@ public class Surface extends JPanel implements IRepaintController, IChangeSettin
 		}
 		showCursor = context.getSettings().isShowRemoteCursor();
         setLocalCursorShape(mouseCursorShape);
+        
+        intelligence = new AIMaster();
+       
 	}
 
     // TODO Extract abstract/interface ViewerWindow from SwingViewerWindow
@@ -127,7 +130,7 @@ public class Surface extends JPanel implements IRepaintController, IChangeSettin
 	private void init(int width, int height) {
 		this.width = width;
 		this.height = height;
-		intelligence = new Intel();
+		
 		setSize(getPreferredSize());
 	}
 
