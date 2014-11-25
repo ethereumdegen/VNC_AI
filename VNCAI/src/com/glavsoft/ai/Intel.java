@@ -1,24 +1,28 @@
 package com.glavsoft.ai;
 
+import java.awt.AWTException;
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.image.ColorModel;
+import java.awt.Robot;
 import java.awt.image.DataBufferInt;
-import java.awt.image.DirectColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
-import java.io.File;
-
-import org.omg.CORBA.Environment;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
 import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 
+/**
+This class is the main brain of the AI.  It pulls in the raw video feed and converts it to a matrix-friendly format for OpenCV.
+
+It can run OpenCV functions on the matrix image and then use the Java Robot class to send commands through the VNC connection as if it were a human.
+
+Hopefully, middle-man code will be built in between the OpenCV pattern analysis and the keystrokes to make the AI more human-like.  
+
+
+*/
 
 public class Intel {
 
@@ -28,11 +32,25 @@ public class Intel {
 	int mouseX;
 	int mouseY;
 	
+	  
+	Robot inputrobot;
 	
 	public Intel()
 	{
 		
-
+			try {
+				inputrobot = new Robot();
+				
+				inputrobot.keyPress(KeyEvent.VK_A);
+				
+				inputrobot.mouseMove(220, 220);    
+				inputrobot.mousePress(InputEvent.BUTTON1_MASK);
+				inputrobot.mouseRelease(InputEvent.BUTTON1_MASK);
+				
+			} catch (AWTException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 	      
 	     
@@ -99,17 +117,9 @@ int framecount = 0;
 		 
 		
 		int rgb = pixels[index];
-		
-          /* int argb = 0;
-           argb += -16777216; // 255 alpha
-           argb += ((int) pixels[pixel] & 0xff); // blue
-           argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
-           argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
-           */
-          
+		                    
            Color c = new Color(rgb);
-        		   
-        		   
+        		           		   
            System.out.println(c);
            
            
@@ -127,8 +137,7 @@ int framecount = 0;
 
 
 	 static void mapPixelsOver(int[] src, byte[] dest) {
-			//ColorModel colorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);
-		 
+			//ColorModel colorModel = new DirectColorModel(24, 0xff0000, 0xff00, 0xff);		 
 		for(int i=0;i<src.length;i++)
 		{
 			int byteIndex = i*3;
@@ -138,16 +147,9 @@ int framecount = 0;
 			int bluemask = 0x0000ff;
 		
 			dest[byteIndex+2] = (byte) ((color & redmask)>>16);
-			
-			//only the red comes over! need to do a bitshift on these
 			dest[byteIndex+1] = (byte) ((color & greenmask)>>8);
-			dest[byteIndex+0] = (byte) ((color & bluemask));		
-			
-		
-			
-			
-		}
-		
+			dest[byteIndex+0] = (byte) ((color & bluemask));	
+		}		
 	}
 
 
@@ -156,6 +158,7 @@ int framecount = 0;
 		mouseY = rY;
 		
 	}
+
 
 	
 	
