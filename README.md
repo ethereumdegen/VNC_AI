@@ -8,3 +8,9 @@ as published by the Free Software Foundation. This is due to the packaged TightV
 
 The license does not permit incorporating this software into
 proprietary programs.
+
+--SETUP--
+1. You will need to download and install OpenCV 2.4.9 from here: http://opencv.org/downloads.html
+2. You will then need to add OpenCV.jar to your build path and point its natives folder to the x86 or x64 folder
+TLDR: I used this tutorial: http://docs.opencv.org/master/doc/tutorials/introduction/java_eclipse/java_eclipse.html
+
