@@ -15,6 +15,10 @@ import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
+import com.glavsoft.VisualComputing.VizionProc;
+import com.glavsoft.ai.ideas.ColorBlob;
+import com.glavsoft.ai.ideas.ColorBlobGroup;
+
 public class IntelWorker implements Runnable{
 
 	Mat matrices[] = new Mat[10]; //stores the last 10 frames of video feed for comparison 
@@ -29,6 +33,9 @@ public class IntelWorker implements Runnable{
 	
 	
 	
+	
+	
+	
 	@Override
 	public void run()
 	{
@@ -37,7 +44,9 @@ public class IntelWorker implements Runnable{
 		while(alive)
 		{
 			float tpf = System.currentTimeMillis() - lastMillis;
-						
+			lastMillis = System.currentTimeMillis();	
+			
+			
 			if(loopTimer >= LOOP_TIMER_MAX){
 				
 				update(tpf);
@@ -46,7 +55,7 @@ public class IntelWorker implements Runnable{
 				loopTimer+=tpf;
 			}
 			
-			lastMillis = System.currentTimeMillis();
+			
 		}
 	}
 
@@ -71,20 +80,34 @@ int framecount = 0;
 		
 		if(getCurrentMatrix() == null) return;
 		
-		Core.rectangle(getCurrentMatrix(), new Point(150,150), new Point(550,550), new Scalar(0,255,0)); //draw rect on image
 		
-		Mat output = Mat.zeros(getCurrentMatrix().rows()+2,getCurrentMatrix().cols()+2,  CvType.CV_8UC1);
+		
+		//Mat output = Mat.zeros(getCurrentMatrix().rows(),getCurrentMatrix().cols(),  CvType.CV_8UC1);
 		//Imgproc.blur(getCurrentMatrix(), output, new Size(3, 3) );
-		
-		
 		//Imgproc.floodFill(getCurrentMatrix(),output, new Point(140,150), new Scalar(0,0,255));
-		Imgproc.floodFill(getCurrentMatrix(),output, new Point(140,150), new Scalar(255,255,255), new Rect(0,0,getCurrentMatrix().cols(),getCurrentMatrix().rows()), new Scalar(10,10,10), new Scalar(10,10,10), Imgproc.FLOODFILL_MASK_ONLY);
-		//WHY WONT IT CHANGE THE FREAKIN MASK?????????????
+		//Imgproc.floodFill(getCurrentMatrix(),output, new Point(140,150), new Scalar(255,255,255), new Rect(0,0,getCurrentMatrix().cols(),getCurrentMatrix().rows()), new Scalar(10,10,10), new Scalar(10,10,10), Imgproc.FLOODFILL_MASK_ONLY);
+		
+		
+		Mat output = getCurrentMatrix().clone();
+		
+		Scalar tolerance = new Scalar(10,10,10);
+		ColorBlobGroup myFirstBlobGroup = new ColorBlobGroup(getCurrentMatrix(),tolerance);
+		
+		for( ColorBlob blob : myFirstBlobGroup.getBlobs())
+		{
+			//draw rects based on the blob group
+			if(blob!=null && blob.getBoundingRect()!=null)
+			{
+			Core.rectangle(output, new Point(blob.getBoundingRect().x,blob.getBoundingRect().y), new Point(blob.getBoundingRect().x+blob.getBoundingRect().width,blob.getBoundingRect().y+blob.getBoundingRect().height), new Scalar(0,255,0)); //draw rect on image
+			}
+		}
+		
+		
 		
 		
 		//EXPORT IMAGE FOR DEBUGGING!
 				framecount++;
-				if(!exported && framecount > 45)
+				if(!exported && framecount > 4)
 				{
 				 String path =   System.getProperty("user.home") + "/Desktop";
 				Highgui.imwrite(path + "/opencvexport.png", output);
